@@ -1,0 +1,2075 @@
+                Servlets and java server pages for Web Application
+
+
+jsp or servelets are fundamental building block of any web application
+framework that we have today like struct, spring mvc,JSF all of them have been build on these basic API
+
+what you should know
+        fundamental of JavaSE APIs
+        JDBC APIs to converse with database
+        Any IDE
+        basics of databases
+        acquaintance with HTML and  CSS
+
+Terms:
+        API-Application Programming Interface
+        java Archive(JAR)-->which is basically a bundle of class file that are external to your project you need to include them in the build path of your project
+        build path/class path--> it is the loaction of all the user defined class that you have to used in web application so that your complier finds them and appropriately use themwhen it want to run your application
+
+software prerequitions:
+        JDK(java development kit)1.6 or higher
+        any ide
+        apache tomcat 7.0x server
+        google chrome, firefox,microsoft edge
+        mysql database server 5.5
+
+
+
+
+
+
+purpose of the servlets
+every website you going to access from the web browser that the web client ,
+ and the web client is going to make  a (request) to the web server and the web server going to act on it  and produce a response give it back to the web client
+
+
+communication with any website that you make today is nothing but a seriesof  request and response
+and it could be a concurrent request(there is a million of user accessing your website all over the globe there could be a multiple concurrent parallel request  comming in from multiple browser)
+
+the entire chain of this  request and response that get exchange between the web client and web server is nothing but over the HTTP protocol(Hypertext transfer protocol)
+
+
+HTTP protocol is the only communication strategy between the web client and server, they donot understand any other language except HTTP
+
+
+                                          HTTP protocol
+                                                 |
+                            Request-->           |
+web client===================================    |  ================
+                           <-- Response          |                 |  
+                                                 |                 |
+web client ====================================  |    ============ web server
+                                                 |                 |
+web client=====================================  |   ===============
+.                                                |
+.                                                |
+.                                                |                  |
+.================================================|  ================
+                                                 |
+
+
+
+
+
+
+Server Side Programming?
+
+1.Java SE APIs?  
+        ( java Standard Edition APIs )it a core java, only to develop a stand alone application
+        yes you do have an applets ,but applets working in browser side not on server side
+
+2.Common Gateway Interface scripts (C-G-I)
+        nothing but program , which help  web server generate dynamic web page( because thats what we need )   every page that you accessing today is customised , (according to kind of user you are)
+        CGI is going to be a costly process
+        Its not feasible, because every request that you make, CGI creat a new process for every new user
+        (every action you doing is a  request, if your going to create a new process for every new request it means youre setting up a new environment ,new context and there a lot of resources  from the machines allocated)
+        so this is terrible going to pull down  your performance of your application
+        Traditional CGI is a older way of coding
+
+3.Other platform of server side programming (ASP.Net API , Node js(javascript), PHP...)
+
+--- we are into the enterprise world of java , we need an API so we can code server side programming features(and that is exactly servlets pitch in)
+
+
+
+
+
+Servlets?
+
+1.Servlets offer yours a robust server side programming option to generate dynamic web page content
+2.way more efficiency than CGI script , because servlets create new thread for every new request
+    we know multi-thread capability of java platform 
+    where you have multi-threads respond and each thread  will be allocate a task to perform , these threads can run in parallel
+
+    servlets  work along with all JVM features such as 
+    (platform dependence --where you compile your program only once and run it on any other OS platform),
+    (object-orientation,which will help you to simulate  a real world entities into programming model),
+    (Multi- threading),(Exception Handling) , (Collection) ,(Generis),(inner classes) 
+    (garbage collection --which runs at schedule time in order to freeup memory space and make sure application run faster) and even JDBC.
+
+
+[The Servlets are going to work in conjunction with your core java APIs to help you build wonderful web application]
+
+
+
+Specification?
+
+JSR 315(Java Specification Request) , no 315 was released by java community : for 3.0  in javaEE 6, java SE 6
+JSR 340 : java Servlets 3.1 in javaEE 7
+Servlets can work with entire javaSE API
+
+
+Environmental SetUp
+1.Configure dynamic web project
+(open Any IDE create any maven Project)
+
+mvn clean package on console --> to create a WAR file (web Archive)tomcat to understand the deployment process
+
+2.setup a instance of Apache Tomcat server(we need to host application on server , so this is a server)
+(install Tomcat for java)extension in vscode
+
+3.set build path of project, add all servlets and jsp API Libraries
+
+4.Add JDBC driver JAR for MYSQL
+
+
+
+alternate setup
+1.create a dynamic project , we create a structure for an eclipses , intelliJ IDE or NetBeans , here we added all the libraries manually or externally(for eaxample: the servlets jsp.jar or jdbc.jar)
+
+2.use of mavens or gradle
+it a project management tools can now actually help you configure tha tbuild path automatically
+(there is command present in the maven which will automatically take your war file on the server and deploy it and show you the console view)
+3.we choose tomcat  server as our software for deployment of the application but you can choose
+(IBM JBOSS, webLogic, GlassFish or any other java-EE-compliants container or server for hosting
+an application)
+
+
+4.we choose  MYSQL database server as our server for the entire application but you may opt for any
+other relational database that you are comfortable with
+
+
+
+setup application
+1.create your application(project) (all HTML,CSS, files in the folder)
+
+2.Implements    
+
+ Model--Views--Controllers [MVC] Architecture
+
+                Views--> jsp or html file
+
+                Controller-->the controller is the components of  your application (which is going to intercept, request and prepare the response ) and the servlets class is the one in our application  which is going to do  this for us
+                so servlets  is going to be the controller
+
+                Model-->this that part of application which gently transacts, converses with the database
+                so we are going to implement the design pattern called data access object (DAO) (which is nothing but the class you write in your project which is going to hold all the methods to connect to the database and all the transaction against it)
+
+process:
+1.if you're trying to implement any use case in our application what we are going to do is,
+go from the view that is the jsp or html to the servlets first
+
+2.from the servlets we will call DAO layer , the DAO is going to talk to the database , it will get all the data then return to the servlets
+
+3.then the servlets will decide what is supposed to be done with the data and what response has to be return back to the client then the response will be carried to the browser and , that where we'll display it
+
+
+
+
+
+
+Servlets Basics:
+
+Https is the communication protocol between the client and the server
+And every request that is made from the client to the server is of a Type
+
+                Type of HTTP Request
+
+1. GET -- get or retrieve information from the server side
+
+2. POST -- process or manipulate information on the server side( going to change the data on the   server side)
+
+3. PUT -- upload the definition or resiurces on the server side
+
+4. DELETE -- delete a resource form the  server
+
+5. HEAD -- head is going to be same as a get request ,(but it only going to return with the header information not the body of the response)
+
+6. OPTIONS -- kind of request which will help you to trace (What HTTP method work on the server  or what are the possible option, that you can run on the target resources) 
+
+
+
+
+
+
+Servlets API Hierarchy:
+
+ servlets 
+ interface () -- servlets got all the methods  declared for implementation a web application
+       ^
+        \
+         \
+          \
+           \
+       ( Generic Servlets)  -- its kind of an abstract class which will help you to design 
+         ^                                                \
+        /                                                   \
+       /                                                      \
+      /                                                         v
+ a "protocol independent application"                    (HTTP Servlets)-- on the other hand has been
+  it could be any protocol                                 designed  specifically to implement
+  that  you want to implement for an app                   "HTTP based application"
+ 
+
+     ServletsRequest and ServletsRespones ()
+
+
+
+
+
+
+setting up the environment
+configure the web application in any IDEetting up a servlets jsp API application
+                add the jdbc driver jar for mysddddsvgfcql
+                deploy and run the project on server
+                deploy the war external to the  IDE 
+ 
+important 
+you know the development --> QA--> Go live 
+development happens inside an IDE , you need to know how to deploy the your project outside the IDE for QA and Go Live  (export file in zip)
+
+here we are added all the libraries manually eg:servlets jsp API, or JDBC jar
+
+alternative setup
+maven or gradle -- setup the entire project structure both are build in mangament tool to setup the  entire project structure and then configure the build path with all the necessary libraries
+this actually help you to configure that build path automatically
+abovesetup is used to tomcat server for deployment but you can use GlassFish,JBoss,WebLogic or any java EE compliant containers / server for hosting the application
+maven or gradle run the project for you there is a command present  in the maven which will a automatically take your war file and put it on the server and deploy  it and show you the console view
+any other IDE, any other Relational DataBase
+
+
+
+finally:
+set up the course application -->HTML,CSS,image file which are related to the project
+entire structure wil be build on 
+MVC Architecture(model-view-controller)
+
+view - jsp  or html file
+controller - servlets  classes that intercepts the request and prepare the response
+model-data access object (DAO)classes that talk to the database, it a design pattern
+
+database setup
+based on your application
+
+
+
+
+
+1. GET
+get request is the question from the client to the server to get or retrieve infromation for the user and the information can either be  text file  or pdf or word document or audio or vedio or entire html content
+
+when you can make a GET Request  , you can send the data along with  it and the data that is sent out is always in the form of query string which is exposed or visible in the URL 
+which is  why GET request is considered to be an insecure Request ,
+the data that is sent along in the get request is of limited size , max is 8KB , Because that depend upon the browser and the server configuration
+GET request is an "idempotent request"
+ (it means whenever you access the url pattern of servlets and make a GET request you are basically going to get information , so it is not going to change anything on the server side) if the request is sent out multiple times
+
+TASK:
+the class that need to equipped with all the fecilities of being a servlets yoou need to extends the HTTPservlets
+
+
+
+process
+                HTML-->Servlet-->dao
+Write a searchServlet class with doGet method
+collect search string  entered by the user and pass to the applicationDAO class
+add method for searching a product in applicationDAO class, which return all the product to calling the methods
+
+
+configure the servlets
+you can configure xml
+    <servlet>
+        <servlet-name>getServlets</servlet-name>
+        <servlet-class>com.servlets.getServlets</servlet-class>
+    </servlet> 
+    <servlet-mapping>
+        <servlet-name>getServlets</servlet-name>
+        <url-pattern>/getServlets</url-pattern>
+    </servlet-mapping>
+
+or either you can do with annotation
+   @WebServlet("/getServlet")
+
+
+html pages and the data that we get from the database is in the form of java object, unfortunately html can only understand static code, so we wouldnot be able to write out the data out of those java object on this pages
+like a search a product 
+
+<section id="search" class="section">
+    <header class="imageheader"></header>
+    <div class="container">
+        <h2 class="headline">Search Products</h2>   
+        <form action="search" method="get">
+            <label class="card-title">Search your product</label>
+            <input type="search" name="search">
+            <input type="submit" value="Search">
+        </form>
+        
+    </div>
+</section>
+to read the entire HTML template as a string,then replace these  placeholder with the respective data value coming from the database and then , to drive that entire static string back to the client
+
+
+<form method="get" action="addProducts">
+            <div class="productContainerItem">
+                <img id="pic1" src="{0}"> <input type="text" name="product"
+                                                 value="{3}"><br/>
+                <button>Add to Cart</button>
+            </div>
+         <div class="productContainerItem">
+                <img id="pic2" src="{1}"> <input type="text" name="product"
+                                                 value="{4}"><br/>
+                <button>Add to Cart</button>
+            </div>
+            <div class="productContainerItem">
+                <img id="pic3" src="{2}"> <input type="text" name="product"
+                                                 value="{5}"><br/>
+                <button>Add to Cart</button>
+            </div>
+ </form>
+
+
+Process:
+write a searchServlets class with doGet Methods
+collect search string entered by the user and pass to the applicationDao class
+add method for searching product in the applicationDao class , which return all product to calling methods
+build the method in the searchServlets,which read the entire searchResult.html file
+                1.read the html as a string
+                2. and then to replace those placeholder with the relevant data of product image and name and for that we are going to use message format API 
+                and return the entire pages as a string
+once we replace we have  to write the replaced page to the web browser using the printWriter API on response Object
+finnaly assign proper attributes to the form element on HTML( by adding attributes like action and methods to the form element)
+on the servlets before we had implement the get request just by just accessing  the URL , when your access the URL you just bound to make a get request by default , here we are making a get request via the form element
+
+
+
+post:
+post type used to post or process or manipulate information on server side (when you make a request from the client to the server , and it going to process the information and give you a response back )
+post is used to modify the data into the data store(linke insert , edit it or an delete it)
+data that you send along with the post request is always going to be in a separate component(which is called as payload of the request object)  so it never going to be exposed in the  url (which is why post is consider to be a secure request)
+
+data that you send out in the post request can be unlimited character length (ofcourse it will be in few kb , because it will depend upon the application and the server configuration which could possibly limit the character length)
+
+post request is "nonidempotent request"
+(it means you tends to change the data on the server side , so we have to be careful whenever we make a post request  again an again ,and that's exactly why all the web application show you those information message asking, you not to refresh page or not to go back to previous page )
+
+
+
+
+TASK :
+user registration, submitting the response using POST request, once submitted we are just going to save the records to the database
+
+process:
+
+ jsp/html-->servlets-->dao-->database
+write the registerservlets class with doPost methods,collect all form data and pass to the dao layer
+write a methods in applicationDao to insert user data
+construct and send an information message back to browser from registerservlets
+write the message back to the client (we use same stratergy we used in search case , we are using html as a template and replace those placeholder and write that message back)
+
+
+ <em>Register User</em><br/>
+	 <em>{0}</em>
+
+finally assign proper attributes to the form element on the html
+
+
+
+
+
+
+
+
+
+
+Forwarding in Servlets API
+
+Forwarding 
+        client ---------->Servlets----------------->DAO
+        |                  |                       |
+        |  <------------   | <-----------------    |
+      (Display)        (process/write response)      (Talk to database)  
+
+
+
+The request that goes from the client to the servlets , the servlets will extract the data , bundle it up in object and call the Dao , the Dao then talk to the database  and return the data in the servlets , the servlets are  then going to prepared the response and give it back to the client , which in turn it going to display it 
+
+often in web application , all the request processing is never encapsulated into a single servlets you often need to split up functionality across multiple servlets to make the code more modular and maintainable
+in this case it is necessary to understand how do you forward the control of the request from one servlets to another?
+
+whenever client hit a request it will go to application context(lets say this functionality will split across the servlets) so the request comes to first servlets  and when the servlets does what it is supposed to do , the request can be forwarded to the other servlets 
+not only in this case  the  servlets can also forward the entire request control to another JSP
+
+Jsp or Servlets their are the resource of the application
+
+
+                                app context
+
+          REQUEST                          SERVLETS
+          >      \                        //
+         /          \                    //
+        /              >               //
+client                                SERVLETS
+        <              /               \\
+         \            /                 \\
+          \          <                   \\
+          RESPONSE                        JSP
+ 
+
+
+<ul class="navbar">
+                <li><a href="home">home</a></li>
+                <li><a href="#history">history</a></li>
+                <li><a href="#products">products</a></li>
+                <li><a href="html/login.jsp">login</a></li>
+                <li><a href="#people">people</a></li>
+                <li><a href="#search">search</a></li>
+                <li><a href="register">new user?</a></li>
+                <li><a href="redirect">linkedIn</a></li>
+</ul>
+if you use your href="html/login.jsp"  like this
+on browser ,once i click the login link,    you get a url path like javaservletpage/html/login.jsp
+like an actual directory of an link to avoid this, moving forwarding concept
+
+forwarding work is to -> if i click a login link, it will  reach a login servlets and from the login servlets, it will go over the login jsp
+ order to do that you need an API called  "RequestDispatcher" on HttpServletsRequest
+
+it going dispatch your request  to another resources of the application
+
+1.     RequestDispatcher dispatch=req.getRequestDispatcher("/html/login.jsp")
+so just getting the dispatcher reference wouldnot be enough
+
+2.RequestDispatcher.forward to hand over the control to another resources
+dispatcher.forward(req,resp)
+
+the question may arise ,why you including request and response object while we forward the call?
+lets say the current resources want to utilize request and response , where the other resources wheres you are forwarding to that may also need to use both of these object
+eg: extracting the request data and writing more response
+if  current resources not doing anything with this object, the next resouces in line would definitely need these
+
+thats exactly why the specification itself dictate that whenever you forward the control to another resources make sure that the request and thr response always go along
+
+3.RequestDispatcher.include
+you can include some response  like
+
+        String html="<html><h3>please login</h3></html>";
+        resp.getWriter().write(html);
+
+
+ RequestDispatcher API:
+ IS basically used to forward the control from one resources to another  "but it is inside the same application " and in this entire process, the browser will play no part , Entirely it is managed by the server side
+ this kind of approach is very commonly used in framework called "struts"
+ where whenever you click on the hyperlink , you always go to an action class from the action class
+the request is dispatched to a JSP
+that way we always safe and we never reveal any of our folder details in the URL.
+
+
+
+
+
+Redirection:
+
+Redirecting in servlets API
+it means we are handling over the control outside the current application context
+
+                app context 1
+                 >          /
+                /         / 
+               /        <
+          REQUEST    RESPONSE                  
+          >         /                  
+         /         /                      
+        /         <                     
+        client                              
+        \                         
+         \                          
+          >                      
+          REQUEST 
+                \
+                 \
+                  >
+                  app contect 2     
+
+
+from our current application moving to linkedkin  website
+the client whose going to click on the hyperlink of the linkedin, when the request goes to app context one which is our application , that application going to understand that this request is for linkedin and i would not be able to serve it , so what id does is  it give a response back to the client
+stating two things:
+           1. i would not be able to serve this request because it for linkedin
+           2. the url for the linkedin is as follow please go ahead and it a request to linkedin
+           the browser always hit a new request , like goto the app context 2 which is a linkedin application
+
+This feature  in which you are navigating out of your application and moving on altogether to new application is the concept of redirecting specification
+
+"HTTPServletsResponse.sendRedirect() API"
+here browser plays a major role
+
+
+few other API under servlets specification
+
+1.servletsConfig
+used to pass  configuration information   to a particular servlets
+lets says your servlets wants to register to a web service URL, when you write the code the URL will be hard coded into the servlets class , there is no need to hard code because its not a good  practice, what we could do this , we could embed this URL information  in the form of config init parameter
+this init parameter defined in the deployment descriptor , which is our web.xml file and they always dedfined under servlets element the parameter in the form of key value pair and they always string type
+once this parameter are defined  in the deployment descriptor they can be retrived  inside the servlets through the servletsConfig
+that why we say  the servletsConfig passes the configuration information to the servlets class
+for each servlets  that you have in your application their is one servlets  object create with respect to it(one servletsConfig instance per servlets class)
+
+In web.xml
+
+ <servlet>
+        <servlet-name>getServlets</servlet-name>
+        <servlet-class>com.servlets.getServlets</servlet-class>
+        <init-param>
+            <param-name>URL</param-name>
+            <param-value>http://www.weatherservice.com</param-value>
+        </init-param>
+ </servlet>
+
+
+@WebServlet("/getServlet")
+public class getServlets extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletConfig config=getServletConfig();
+        System.out.println(config.getInitParameter("URL"));
+    }}
+
+
+or 
+In servlets code
+
+
+@WebServlet(urlPatterns="/getServlet",initParams= @WebInitParam(name="URL",value="http://www.weatherservice.com"))
+
+public class getServlets extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {}}
+
+
+2.servletsContext API
+it is opposed to servletsConfig
+it is used to pass configuration information for the entire application
+if you want to share across all the servlets of your application then you need to grab the servletsContext Object
+it as well their will be parameter defined and will be defined in the deployment descriptor which is our web.xml
+now please note that since it os our entire application the parameter wouldnt be attached to particular servlets but they be attached to the entire application
+parameter arev key value pairs and always of type string
+there always one servletsContext object for the entire application
+it is not going to be a servlets basis , it is going to be a application basis
+
+for eg your are using database to entire application , we actual do hard codingthis into the class in dbconnection file  
+but we actually take this and put is as context parameter so that it will be available to all the servlets wothin the application
+
+instead in dbconecction file
+public class dbConnection {    
+    public static Connection getConnectionDatabase(){
+        Connection conn=null;
+         try {
+            // load the driver class
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            System.out.println("MySQL JDBC Driver Registered!");
+
+            // get hold of the driver manager
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/hplus","root","Keerthi1405@");    
+            System.out.println("Database successfully opened."); 
+        }
+    }
+}
+
+In web.file
+    <context-param>
+        <param-name>dbURL</param-name>
+        <param-value>jdbc:mysql://localhost:3306/hplus</param-value>
+    </context-param>
+
+then we could fetch this parameter in our servlets
+
+                ServletContext context=getServletContext();
+                System.out.println(context.getInitParameter("dbURL"));
+
+and check the web application console 
+
+3.HttpServletsRequest Object
+whenever  yiu make a request from the client to the server
+the request is represented in term of object
+this is extends servletsRequest API and provide all request informaation to HttpServlets
+it consists of two part header and body
+            the header is all the extra information that you may  need for the request
+                like what type of content are you sending from the client to the server
+                     what is the browser information 
+            the body however will contain the data that you are sending along with the request
+            as for the get request the data is never in the body but it is always visible in the URL in the form of a query string
+        
+httpServletRequest is huge one but here we are just going to take a look at some important API call
+
+        request.getSession()--> it is responsible for doing  session management in the application
+        request.getHeader(String headerName)--> so when you pass the  header name as an 
+                                                argument , it will return you the value of that header through this API
+        request.getRequestURI()-->it is going to return you the path starting from the protocol 
+                                  name upto the query string for a particular URL
+        request.getParameter(String param)--> it going to return you the data from the request 
+                                               Object
+        request.getCookies()-->it going to get all the cookies that the browser sent as a part of a 
+                                particular request
+        request.getMethod()-->which will return you the kind of request that you made from your 
+                              client
+                              if you make a get request it going to return you a GET as same as POST so on so forth
+                              in case of post request the body is going to hold that payload component, which  has got all the  data and hence that data is never going to visible in the URL
+                            
+
+4.HttpServletsResponse
+it extends the servletsResponse API represent all the response Information that you want to write back to the client, it also contains header and body 
+body is exactly the place where all the response that you have written out from the servlets
+whereas the header contain extra information
+again it is huge object lets take few important API call
+
+        response.sendRedirect(String URL)--> it is in redirection concept which help us todo 
+                                                redirection that going out to another application altogether
+        response.getCookie(Cookie cookie)--> if you excusively want to save some cookies from the 
+                                             server back to the browser software , you can do that by invoking this API call it call addCookie this demands the cookie object, you can store the cookie name , you can also store the time for which this cookie going to remian alive in the browser, the entire cookie object can return as a response
+        response.encodeURL(String URL)--> it is part of session management again ,as a part of url 
+                                          rewriting
+        response.setContentType(String contentType)--> it give you the option to set a 
+                                                        propercontent value for the resposne like writing a response in a HTML document or PDF document it set contentType to the response object using this API call
+        response.getStatus()-->whenever a request is sent from the client to the server the server 
+                               is going to do processing and sent s response back, now the response either could be a success or it could be a failure, each of these response has an integer status code , that it what you get out of this API call
+                               like status code is 200-->it means it is an success operation
+                                    status code is 404-->it means it was not able to find one of 
+                                                         your pages
+                                    status code is 500-->it means its some internal server error
+                                    status code is 403-->it means youre forbidden to access that 
+                                                        resources
+                        there is a lot of status code is their and you cam fetch using this API call
+        response.getWriter()-->which we have been using all over to get the print writer and write some response to the web pages
+        
+
+
+scope in web application:
+All the component that you have in your web application like servlets ,filter,listeners,JSPs all of them talk to each  other, because their need to work together in order to run the appliaction,
+talking to each other  is by sharing information,think about it where do you want to save this information--> in the database (that is not good idea)if you really want to access to the information , you need to make a database strip for it , which is going to be a costly business
+and moreover, the infornation that youre trying to use to communicate between the different components may really need to die out quickly, lets say i want ot store some information only for one particular request and once that request is completed i need to get rid of the information and that exactly where you have  the facility  of scope in the web application
+the information that you want to share across components can be store in scope object in the form of attributes
+attributes could be anything like string ,integer or a completely user defined object
+
+there are primarly four scope in the web application
+
+1.Request scope 
+            which is represented by a HTTPServletsRequest or servletsRequest
+            this scope is going to alive till the response of this request go back to the client , so you can store your information in the request scope in the form of an attributes
+            the inforamtion of an attributes again an key-value pair
+2.session scope
+            which is reprsented by HTTPSession object 
+            this scope is going to alive till the user  quits the browser or the user click the logout button or maybe the session itself time out on the users  machines
+            note inside the session their is multiple request spanned
+3.context scope (or application scope)
+            which is represented by servletsContext object
+            we servletsContext help you to share information across the servlets ,moreover it can also help you to share information in the form of attributes and pass it to any other components of your web application
+4.page scope
+            which is reprsented by JSPContext object and it is going to be accessible from any JSP page that create that object
+
+
+
+
+
+difference of parameter and attributes
+
+
+
+
+            parameter                                    attributes
+we have seen them in the client data         we seen when have spoked about scope
+
+parameter only going to return you            attriubutes help you to return objects , attributes 
+ a string value                               may be  String,Integer or user defined object anything
+
+ parameter cannot be set in scope             attributes can definitely set in scope and that   
+                                                exactly how you pass that informtion across all the component
+one of the way to retrive parameter            you want to get the attribute information there is an
+is the way to use getParameter API              API called getAttribute to which you pass a key and
+we use this on request object fed the           you get the value of the attributes  
+name of the parameter and you get the value   
+in return
+
+setting parameter is done that in web.xml      set attributes it demands the key and value
+thwe init parameter,context parameter
+parameter are not set in scopes like attributes
+
+understanding the servlets life cycle
+
+you seenn the project all of them are extends HttpServlets and have either we override the doGet or doPost methods and action are taken acordingly whenever we hit a request from the client the control automatically came inside one of the doGet or doPost methods
+
+but in java, whenever you want to invoke a method of an any class you need an object of that class and then a referrence variable to call that methods ,
+but we have never instantiated any of our servlets class nor did we callany of these method ourselves
+so what is the entire things that goes behinds the scene, where this is  getting worked out automatically?
+this is what we need to understand as a part of servlets life cycle
+tge servlets life cycle firstly entirely managed by the server container, in our case it is tomcat or any other JEE-Compliant container sources or server software as for the project
+the life cycle of the servlets is start of when the first request comes in for that servlets, and it will end when the application is either undeployed or maybe the server shutdown
+
+servlets life cycle in two phase
+first phase--> is when the first request comes into the servlets
+second phase -->when repeated request comes from thesame servlets
+
+
+servlet life cycle of first request
+
+1.                              2.
+first request                   container scan a web.xml file
+comes in            ----------->and find appropriate servlets
+http://localhost8080/test/login  class as per URL pattern
+                                you have a annotation way of config 
+                                it will scan the class 
+                                once it find the class
+                                |
+                                |
+                                |
+                                v
+                            3.
+                             it going to load and instantiate 
+                             that servlet class based on the conventional
+                             class loader information that it as
+                             so there is a   classLoader API in core java
+                             which it use  in order to load or instantiate
+                             that servlets
+                             now a very important way to note here is 
+                             that whenever you have n number of request 
+                             comming to the same servlets there is only one
+                             instance of a servlets that get created
+                             no matter id there are million of request comming from million of user for the same servlets but all those request will have only one servlets object
+                             once the instance of the servllets is creatrd there is lot of inizialization acitivity that happen after------------------------|
+                             ^        ^    ^                                                   |
+                            /         |     \                                                  |
+                           /          |      \                                                      
+                          /           |       \
+ i)                                   |  ii)
+the first one is that servlets config |  next iit allocate new thread to request
+and context object will get created   |  now this is important again
+they get created and atached to the   |   you may have your application being  accessed by  
+servlets                              |   multiple users at exactly  the same point in time
+                                      |   this entire set of concurrent request is going to be 
+                                      |   handled by the multithreading capabily of java platform
+                                      |   so every request is going to allocate a new thread and 
+                                      |   hence those thread are going to run in parallel
+                                      |   (the incoming request is going to get allocated a new 
+                                      |   thread)
+                                      |
+                                      |
+                     iii)             |                 
+                     And once this is done it also allocates
+                     a pair of httpServletsRequest and httpServletsResponse
+                     object and attached it to this incoming request
+                     once done it going to call series of API 
+                                                                                                |
+                                                                                                |
+                                                                                                |
+                                                                                                |
+                    ----------------------------------------------------------------------------
+                    |
+        4.          v
+         then it call to the init methods
+                    |
+                    |
+        5.          v
+            service method 
+                    |
+                    |
+        6.         v
+            destroy methods
+
+
+
+Now theres a very big doubt in the mind that may come, Where are this methods coming from ? wehave never  written out any of these methods in any of our servlets class
+
+the service methods comes from the httpServlets classes
+the init and destroy methods comes from the GenericServlets classes
+lets recall the hierarchy 
+
+                servlets
+                ^
+                |
+                |
+                GenericServlets
+                ^
+                |
+                |
+                HTTPServlets
+
+when init methods is called what exactly happen?
+init methods is place to accomodate any kind of inicialization activity for your servlets
+eg:
+lets say your servlets want to interact with the database, you can set up the database connection inside the  init method 
+or lets say your servlets want to display the weather information all the time so you can connect to that weather service inside the init methods
+
+"any kind of one time job happens in init methods" because init methods goingto executed only once during the entire life cycle of the servlets
+
+upnext:
+it call the service methods
+the service mrethods comes from ofcources HTTPServlets and it is already implemented there
+the logic that goes inside the service methods: depending on the kind of request that was made from the client lets say its a GET or POST methods or anything like that 
+the sefvice methods is accordingly going to delegate the call to either the doGet or doPost Methods
+this is the place where exactly where your request is being served for the user
+now once your application is about to get undeployed or may be say your server is absolutely shutting down altogether  thats the point when the destroy methods of the servlet is called
+destroy methods is going to hold any kind of clean up activity that you want to do for the  servlet
+somaybe your have some object created inside the init methods where you can clean them up in destroy methods so theyre eligible for the garbage collection process
+
+for this how the life cycle look like for the first request
+
+
+now the SECOND phase:
+where their are multiple request coming in for the same servlets 
+from the life cycle steps ii),iii),6 will be followed, those steps are repeated again for repeated request
+the instance is only one that does not happen again, directly the new thread will be allocated to the request a new pair of httpservlets response and request object will be created and attached with that request an then directly the service methods is called , again depending on what request is made the service will go over and call either the doGet or doPost , so on and so forth
+
+like init , destroy will call only once during the life cycle so they will not happen again and again
+
+init and destroy definitely override  by the developer , service methode there is no ligical reason to override it
+
+
+
+TASK:
+create a home servlets do--> init,service and destroy
+and create configuration in web.xml for homeServlets
+(the job of home servlets is only to forward the control to index.html(landing page, purpose of inserting homeservlets in our application, is that we do not want to access the index.html as a static resources, we know that we need to go to the servlet and then go to an html or jsp using the forward mechanism so that we always save and do not reveal any details of our code in the url))
+
+after running the application 
+http://localhost:8080/javaserpages/home
+
+check the console: you will get this methods
+
+in init methods
+MySQL JDBC Driver Registered!
+Database successfully opened.
+Connection made to DB!
+in service(doGet) methods
+
+after undeplying your application:checking the console you get below
+
+in destroy methodds
+
+
+
+
+
+
+JavaServerPages -- JSP
+why do you  need a jsp , when you already have an html?
+lets understands the problem we have in html pages:
+                    it allows you to take render static data alone
+                    I/O opertion of read and write html template back is time consuming process
+                    stuffing all html with css code directly inside the servets is tedious
+                    specialized UI developer maynot be equipped to  handle servlets code
+we need solution to generate dynamic content , and that exactly where you have concept of jsp
+
+jsp allow you to create dynamic content
+dynamic content:
+eg: linkedin --> you get a new feed, left you have a updated connection of yours, right side the advertisement customized based on the user i am,
+dynamic content is must in web application
+
+
+features of JSP:
+
+Static code + dynamic data
+this is essentially that jsp allpw you to write both html and java code, and exactly how you can make your pages dynamic
+jsp have  a file extension .jsp and " they get executed at the server side and then rendered to the client"
+jsp can work with scripting language
+jsp can equipped with lot of features expression language or javaserver page tag library
+
+expression language:
+it is very simplified syntax of navigating through your  entire graph of java object of server side with very easy to go syntax on the jsp, not only navigation it help you to do lot of computation, comparisons between operands, etcs
+javaserver page tag library:
+it is huge bundle of many tags, which you can directly embed on your jsp and when your jspp get executed the tag is going to run some code behind the scene
+
+
+JSP element:
+jsp element used to support java are any other scripting code on jsp  pages
+all java code goes into the translated servlet file of jsp
+eg: if you have a login.jsp (it has both html and java code)file whatever the code that you embed as a part of jsp element on this page, once you do that ,the entire  code is going to get translated into loginServlets.java
+it a servlets class so it definately going to be similar to the way we have written servlets class so far
+but the translating process will be completely owned up by the software container, as  a developer we wouldnot do anything for this
+once this is going to get translated, it also going to get compiled because the class file is what the server  need to execute any java code
+java file can compile and convert to class is similar for java
+
+jsp type of element:
+1.Scriplet
+
+<% %>-- help write java statement on jsp
+what this scriplet do?
+statement it could be an if condition or for loop or any amount of statement it comprise your logic
+all the code in the scriplet will go into the _jspService() where the jsp get translated with the corresponding servlet class
+
+
+     file--------->    loginServlet.java{
+                            _jspService(){
+                                
+                            }
+                        }
+
+
+2.Expression
+
+<%=%>-- help to evaluate expression and print them output them on the  jsp page
+
+     file--------->    loginServlet.java{
+                            _jspService(){
+                              out.println(<<expression value>>)  
+                            }
+                        }
+        
+expression value is going to go as an argument too an API
+out.println is responsible for printing a value on the jsp page
+
+essentialy all the  code yiu write in the scriplet or expression ultimately goes into the _jspService methods of the translated jsp servlets file
+
+3.Declaration element
+
+<%!%>--helps declare variable and methods in a page scripting language;code goes as separate methods in tramnslated servlets  file
+if you really like to add newvaraiable and methods in that translated file then you need to use declaration element
+(whatever code you written here is instancevariable and instance methods and they ll go out an separate entries into the translated servlets file)
+
+
+
+TASK:
+convert search.html into search.jsp
+
+and on searchServlets change:
+
+//write the product data back to the client browser
+//String page= getHTMLString( req.getServletContext().getRealPath("/html/search.html"),productsearchedList);    
+//resp.getWriter().write(page);
+
+to 
+
+req.setAttribute("product",productsearchedList);
+req.getRequestDispatcher("html/search.jsp").forward(req, resp);
+
+
+
+on search.jsp
+    <div class="productContainer">
+        <form method="get" action="addProducts">
+            <div class="productContainerItem">
+                <img id="pic1" src="{0}"> 
+                <input type="text" name="product"  value="{3}"><br/>
+                <button>Add to Cart</button>
+            </div>
+           <div class="productContainerItem">
+                <img id="pic2" src="{1}"> 
+                <input type="text" name="product" value="{4}"><br/>
+                <button>Add to Cart</button>
+            </div>           
+            <div class="productContainerItem">
+                <img id="pic3" src="{2}"> 
+                <input type="text" name="product" value="{5}"><br/>
+                <button>Add to Cart</button>
+            </div>
+        </form>
+    </div>
+
+replace the above static html code with placeholder to jsp element
+    <div class="productContainer">
+        <%
+            List<product> products = (ArrayList) request.getAttribute("product");
+            Iterator<product> iterator = products.iterator();
+            while (iterator.hasNext()) {
+                product product = iterator.next();
+        %>
+        <form method="get" action="products">
+            <div class="productContainerItem">
+                <img id="pic3" src="<%=product.getProductImagePath()%>"> <input
+                    type="text" name="product" value="<%=product.getProductName()%>"><br/>
+                <button>Add to Cart</button>
+            </div>
+        </form>
+        <%
+            }
+        %>
+    </div>
+
+TASK:
+assign a declaration for login.jsp
+
+you can declare this method anywhere  in the code
+
+    <%!
+        private String displayDate(){
+        SimpleDateFormat dateFormat=new SimpleDateFormat("YYYY/MM/dd hh:mm");
+        Date date= Calendar.getInstance().getTime();
+        return dateFormat.format(date);
+        }
+    %>
+
+
+and add the methods with expression tag
+
+	<section>
+		<%--displays data and time for today--%>
+		<%=displayDate()%>
+	</section>
+
+
+
+we already seen servlets life cycle
+now we going to see jsp life cycle 
+this can also be viewd in 2 phase like servlet phase
+
+the first phase is when the first request comes in for the jsp 
+the second phase when the repeated request come in for the same jsp
+
+
+first request 
+comes in for jsp----->then the container is first 
+                 ^        going translate that jsp to
+                /          a servlet class
+              /           (container going to completely own 
+             /            up the responsibility of translating 
+declaration              jsp to the servlets)we dont need to do
+element code             anything for this
+                                |
+                                |
+                                v
+                then the  translated servlet file
+                which is .java file is going to get 
+                compiled into a .class file      
+
+                (translation and compilation are going
+                 to happen only once during the entire 
+                 jsp life cycle, once this completed
+                 then the rest of the life cycle is exactly 
+                 same as it happen for the servlets)
+                                |
+                                |
+                                v
+                 load and instantiate the servlet class
+                                |
+                                |
+                                V
+                    inizialization by calling a
+                    jspinit methods
+                    (since this is jsp, translated servlet 
+                    for the jsp will look like a 
+                    different form the servlets classes
+                    that we write, so instead of having a 
+                    init method for the httpServlets , for the 
+                    JSPservlets class you have jspinit methods
+                    to hold all the code for your inizialisation
+                    activity)
+                                |
+                                |
+                                v
+                    after that, it will call the _jspService
+                    methods
+                    (so thats the service methods for the jsp 
+                    class)
+                                |
+scripture and                   |
+expression element \             v
+code                \
+                     v  and finally whenever yiur application is 
+                        shutting down or youre undeploying it     
+                        you will have the jspDestroy method call
+                        which is reserved for all theclean up activity
+
+so where are this methods coming from ?   
+                      
+jspinit,_jspService,jspDestroy  all of them come from a class called HTTPjspBase 
+thats the parent for the translated JSP servlets file
+
+generally we write a servlets class we always take the httpServlet as our parent
+but when container translate a jsp to a servlets the parent is httpjspBase
+as a developer you can override the jspinit or jspDestroy method and or whatever kind of initialization
+or a clean up activitythat may you want to do
+
+so basically ,the code that is written inside the scriplet and expression element is going to get inserted 
+into the _jspService method, whereas the code that you write under the declaration element is going to diretly  sit inside the servlet file
+
+that how the servlets life cycle for the first phase
+for the subsequeent request,it directlhy going to call the jspService methods and then it will serve the request that the  client asked to do it
+
+
+
+but want find the trsanslated file where it is in?
+got to tomcat folder under the  work folder 
+
+literally  like
+apache-tomcat-9.0.85\work\Catalina\localhost\javaserverpage\org\apache\jsp\html
+just open the respective translated file in any ide to view  the code
+
+
+
+JSP  Directive:
+jsp Directive are special instruction that are provided to the container software for the translation process, we know that the container is responsible for converting jsp into a servlet file
+directive are those components inside your jsp pages which will relay those instruction to the container for the translation process and it also definitely going to change  how the compilation process also happens
+directives will never appear as a part of output , they do not produce any output, theyre just supposed to be relaying message to  the container
+
+what are the kinds of job the jsp directives can do for us?
+                
+                1.it could import classes  for the code that youre writing on the jsp(you are using a lot of classes on the jsp code, in java the rule is your are using  a class you need to import it so thats what the directive does for us , if youre using class in jsp it will import that class for you using jsp directive)
+
+                2.then it also allow you to devise error pages for the application
+                (lets say for example we have multiple screen in your application , one of the screen right now functional and something goes wrong on it, if something goes wrong you really not want to show the exception stack trace to the end customer becz customer would not be able to make any meaning out for it , so  instead it would be better to drive the  user 
+                or the customer to an error page and show a beautifully displayed error message asking the  user to try the  website at later point in time, so that facility can be devise with the help of directive)
+
+                3.it also help youto include jsp resources dynamically into the current pages
+                
+                <%@ page errorPage="error.jsp" %>
+                <%@ page import="java.text.SimpleDateFormat" %>
+                <%@ page import="java.util.Date" %>
+                <%@ page import="java.util.Calendar" %>
+
+
+                <%@page import="com.bean.product" %>
+                <%@page import="java.util.ArrayList" %>
+                <%@page import="java.util.Iterator" %>
+                <%@page import="java.util.List"
+                 isELIgnored="false"//EL-expression language, you are really want to ignore this expression language for this jsp
+
+                 ThreadSafe="true";//it is set default true  it means that your jsp can handle concurrent request it says you may have synhronized that block of code , if false the request willbe handled one at a time, it will pull down your performance
+
+                 buffer="8kb"//size of an output
+                 contentType="text/html; //type of document /file
+                 charset=ISO-8859-1"
+                 pageEncoding="ISO-8859-1"
+                 errorPage="error.jsp"//find error specified page/file, It direct the user to error page,
+                 you have to create file with error message in (error.jsp) ,if anything goes wrong the error message will be printed
+                 isErrorPages="false" //is the error.jsp is a error occurred page
+                 extends= ""%>//you can extend parent class you want add , have to take responsibility in translated jsp
+
+
+Type of jsp Directives:
+totally 3 directives:
+                    1.page Directives
+                    <%@page%>
+                    all the information that you want to feed to the page directory is always in the form of attributes , basically the directive lok like an element on a jsp page and the extra information that you need to feed is in the form of attributes
+                    what all does the page directive do?
+                                import classes
+                                help config  error pages
+                                sets up session for the jsp
+                                help set character encoding for the pages
+
+                    2.include
+                    <%@include%>
+                    this is basically use to include any jsp page resources in the current jsp
+                    like the page directive if you want to pass any extra information to this directive it will be in the form of attributes
+                    why do we want to use this, where is this used?
+                    in your web application it will pull out the data from multiple
+                    very important one:
+                            lets say your application contain differenet commponent
+                            like header ,menu, main content, footer
+                            main content body that keep on changing  dynamically , if you loom at a header ,menu ,footer theyre more or less the static part of your pages
+                            lets say if i have 10 other screenin my application , it is not going to advisable to put on this header, meny, footer in each of these 10 screen
+                            basically  it will be like duplicating code, it is redundancy and its non ,maintainable code, if my logo of the organization changes i will have to make  a change at all the 10 pages, which is not a very good thing, what we could do is, we could actually break this page into automic pieces like header pieces , another menu pieces, yet another is footer pieces and then we separate  these automic pieeces into their own pages , now when we construct a screen what we could do is? 
+                            we could include the header jsp,include the menu jsp , include the footer jsp and then go on  and write  the code for main content
+                            thats what include directives does for us
+                            it help you to includes this automic pieces together and prepare a whole pages
+                            (this concept is very close to the composite view design pattern that we generally have in case of web application page  development) 
+
+                    3.taglib
+
+                    we see in java tag server pag libraries
+
+
+implicit object on jsp pages
+object are already created on a jsp with predefined  variables,you can only access with the predefined name not with the any other name
+there is a big list implicit object that you have in a jsp
+
+        1.out:
+        this object is basically a  jspWriter class this is one which will print or write an output to the jsp pages
+        if you remember whenever we wrote  a response through the servlets class , it was thropugh the printWriter object, wheneever you want to write in a response through a jsp you will use the jspWriter object
+        here 
+        out.println("");
+
+        2.request:
+        this is basically going  to be for httpServletsRequest object , so this is the entire request for the jsp pages
+
+        List<product> prods = (ArrayList) request.getAttribute("product");
+
+        3.response:
+        the way you have a request object, similarly you have a response object
+        response.sendRedirect("")
+
+
+        4.session:
+        it represent the  httpSession, it is excusively reserved for session management ,you can do loads to stuff withit on the jsp pages
+        session.getAttribute("")
+
+        5.config
+        it is represented by one of the  servletsConfig API
+        if you want to fetch any information from the sevletsConfig object  then you can use this named variable  and accessthis object directlyon the jsp pages\
+
+        6.context:
+        similar to the servletsContext, which will share the information across all the  servlets, so you can use this named variable called application and fetch whatever you want out of the servletsContext
+
+        7.exception
+        it is basically belongs to the exception class of java and it is used to debug your errors on the error pages
+
+        8.pageContext:
+        this is the hero of all the implicit object we have,thats because it contain a referrence to all the other implicit object and it can be used to access information of the pages
+        pageContext.getrequest()
+        pageContext.getresponse()
+        pageContext.getOut()
+        pageContext.getException
+        .
+
+        9.pageImplicit object 
+        which corresponse to the current jsp page
+
+
+
+
+session management:
+before moving  to session management we have to learn http limitation
+            HTTP is a stateless protocol
+            eg: a client comes with a request like add a idem to cart in shopping application then it goes to the server the server is going to add the item to the cart and then response back to the client with an appropriate message after this the server forgets this user so if the same user comes over again and add another items to the cart the server is going to treat it as a new user, if the same user come over an over in all these cases the server  would treat it as a new user this is not a very good suitation  because imagine your sense on a shopping cart application, when you add productto the cart and you add another product, you except that the first product is  already lying  there in the cart if your server doesnot track your shopping cart ,then it could be a very bad experience to you as a end customer
+            so there is a need to conserve the state of conversation between the client and user, the server should know  that its the same user whois coming again an again andit should preserve the information for that user so that it become easy for the state to be maintained
+            so what are the solution for this?
+
+            the server could actually store the information in the database upon the first request from the user and then for every sunsequent request from the same  user , the server could actually pull the database information for all the users match it with the incoming user information and then understand thats thesame userwho has come before, but making a database trip for  every request is going to be a very expensive and time consuming process , so thats not feasible
+            there is a session management that you can implement with Enterprise Java Beans, which is  (EJB) API but it is altogether  another topic and it is not under the servlets JSP API
+
+            so in order to solve this session tracking problem
+            servlets specification has offered as the HTTPSession API for session management
+            the HTTPSessionis going to be created , so its an object and that get created for every user and then we can use that object to store the information, pertaining to the user
+
+            server doesnot go and overwrite one user information with the other user information each user will give a session object and every object should be uniquely identified by a session id
+            so the server is going to setup the session id to uniquely track every user information
+
+            so when you use HTTPSession API for session management
+
+
+this is how it look like
+
+                            SESSION ID
+      -------------------------------------------------------->
+client------------------------------------------------------->server
+      ------------------------------------------------------->
+      ------------------------------------------------------->
+      <------------------------------------------------------
+                                SESSION ID
+
+the client comes in with the first request to the server, the server is going to generate that session id and give it back to the client aspart of the response
+every subsequent request that further comes from the  same client this session id is going to travel from the client to a server, so that the  server recognize that it is the same user
+essentially this server is going to help the client and the client is going to help the server 
+they going to work together and ofcources the session id needs to get exchanges between them continuously for every request response chain
+this session id can be exchanged by two way either by cookies are by URL rewriting
+
+
+Cookies for session management:
+
+lets us understand how is the sessionID exchanged  through cookies
+firstly ,what are cookies?
+cookies are small piece of information that are stored in the browser software,they could be information pertaining to the user or the application
+now understand how the session id is generated and then how it is exchanged between the client and server via these cookies
+
+
+
+                generate session id for the new user
+                         /                             \
+                        /                                \
+                       /                                   \
+    first request     /                                 creates cookies object
+    -------->       server              q                     |
+client     <------------------------------------ stuffs the session id into cookies object
+                       Response                   and write it as a part  ofthe response           
+                       
+
+another request ,client---------->
+send cookies along with           \
+the request                         \
+                                      \
+                                        v
+                                    server matches incoming session id
+                                    to its generated ids and recognizes 
+                                    that it has a same user
+
+
+
+let say the client comes in with the first request, now the server will understand that is a new user, because it did not receive any session id from the client , so it will generate a new session id for this new user,after that it create an object of the cookies class
+cookies is an API available to you under the servlets  specification
+once it creates an instance of the cookies, the server is going to stuff that session id into the cookies object and write it as a part  ofthe response
+like when we  saw the HTTP servlet response API, we had  seen an API call on it which is called a 
+response.addCookie , which help you to add a cookie object as a part of the response , so that is exactly what the server does it write the entire cookies object stuffed with the session ID back to response and the response send to the client
+
+now lets say the client  comes in with the another request,ensures that the cookie is always going to travel along with request
+ao when it reaches the server side the server can extract the session id out of the cookie it will maches it with one of its already generated ids and if it finds one , it recognizes  that it is the same user
+
+as of the developer you do not have to do this entire tedious process of the getting the session id exchanged
+the client and server are smart enough to do that exchange between them automatically
+the entire process to be set up for  our application, we have to write one line of code ,which is this:
+trigger the entire process by
+                    request.getSession() API call
+
+this primarily return you an HTTP session object and that  exactly where the entire process is set up by the server and thereafter the session id is going to travel between the client and server back and forth for every subsequent request
+
+TASK:
+we search a product in our application ,after displayed product, we click the button "add to the cart"it make a changes by increment the cart list
+
+
+process
+we have to write a servlets for session management (sessionServlets)
+get the httpsession object on the httpservletsrequest API
+create a list of product for the user cart and 
+keep adding selected product name to the list
+set the list to the session object as an attributes(exactly what we want to do in session management we want to  take the cart and we want to track it throough the session)
+we have to write the size of the cart back to the client and also have to display the search result against that search critera
+add form element adttribute on a page
+get the searchResult from the dao
+set the search resultin request scope or attributes
+forward to the searchResult.jsp
+
+
+URL rewriting
+it is a fallback option and it is going to kick in only when the cookies are disabled in your software browser
+generally today in all the website, cookies have to be enabled because thereis all of website running on internet , which work with cookies, so you really cant disabled them today
+if they are disabled we need to have another way of exchanging the session ID between the client and server
+
+URL rewritting is the name suggest that you are rewriting the url , when you say rewriting  youre basically appending some information at the end of the url, that information is nothing but the session id
+
+basic url : http://localhost:8080/hplus/viewprofile
+;jsessionid=0D7785C45678AG6S87JHGGG66767676HBHH
+
+semicolon separater after that 
+the session id is in the form of key
+and the long value that server generate
+
+
+now this separator of semicolon and jsessionid name of the parameter arevery specific to the tomcat container software
+if you goo ahead and choose any other JEE Compliant server anf in the case the separator and name of the parameter could possibly be different
+so this url rewriting is something that the server will do for us but we as developer need to encode all the necessary  urls 
+all the url that you attached to your hyperlink or form action element or whichever element on your page that you have explicitly encodes those urls
+how do you encode them ?
+basically you invoke an API for it
+until you encode  this urls the server would not enable the url rewriting process for you, it will obey your commandfor urll rewritting only if you tell it to do it so thats something that we have to do
+this could bea tedious option because may be  really large number of urls in your project and you may really have to sit and encode all of them on every pages but yes this is definitely going to be the case if your cookies are disabled, so this the only way of exchanging the session ids or you will have to implement url rewriting 
+
+eg:
+if you click on the login hyperlink , after entering login crediantial, we assume that it going to be suucess login, once i login we are going to do an session management , nand after when you come to home page with orderhistory and view my profile hyperlinks(this are very specific this user login) by clicking the view my profile we get some information
+
+but what,  lets say  some user comes in , copies this url and tries to maliciously access it on some other machine or lets say the sessions itself times out on this machines(then it a problem)
+
+our understanding is to clicking on view my profile the session that i had setup on the click of login should continue  and i should be able to see the user name
+
+
+when i click on this link i will write a servlets and there we are going to fetch that username  from the session to verify that the session management is indeed working correctly
+
+
+TASK:
+the first thing we have to do is  we have to disable the cookies in the browser, becz we know that url rewriting will pitch in only when the cookie are disable
+setup session in loginServlets
+set up the HTTP session:
+
+        HttpSession session=req.getSession();
+        whenever you said request.getSession , if the user is coming for the first time , this API call will return a new http session object, but if the same user comes again an again  in the same servlets, where you have invoke a same API, its basically going to return the  same session object identified by the session ID that it is receiving from the client
+
+set the username as an attriburte
+forward to the home.jsp
+write viewprofileServlets and fetch session information to verify
+
+moving to the home page and click one of the link and when in click i should enter a servlet that servlets should give me the appropriate username from the session if that the case then we know that the url rewriting is really working  for session management
+
+create a viewprofileServlets to get the link
+to encode the url for viewProfile hyperLink on home.jsp(you know that the developer has to encode the url  only after the url rewriting process is going to be done by the server) encode the url with the help of expression element
+
+
+<ul class="navbar">
+<li><a href="home.jsp">home</a></li>
+<li><a href="#orderHistory">order history</a></li>
+<!-- <li><a href="viewProfile">view my profile</a></li> -->
+<li><a href='<%=response.encodeURL("viewProfile")%>'>view my profile</a></li>
+<li><a href='#logout'>logout</a></li>
+<li><a href="#redirect">linkedIn</a></li>
+</ul>
+
+
+
+session API in the web application:
+
+        HttpSession session=req.getSession();
+
+     session.getCreationTime()-->it will give me  the time exactly when the session was created
+            .getAttributes()-->to get the session information stored
+            .getId()-->it will give you that long ID number(that we had generated through the server)
+            .getLastAccessedTime()-->it give us the time , when the session was accessed last
+            .getMaxInactiveInterval()-->it means how much is the time that the session can remain idle, 
+                                        inactive after  that period the server  is going to close the session or invalidate the session(and you can also do it in the web.xml ,sometimes people choose this as a place to configure the session timeout period, becz whenever you change anything in our java file , it as to be compile again and you have to redeploy the project , however if you change in your web.xml , you just need to restart the server , there is no need of redeployment, (value in minutes))
+
+                                            <session-config>
+                                            <session-timeout>60</session-timeout>
+                                            </session-config>
+            .setMaxInactiveInterval()
+            .getServletContext()-->
+            .invalidate()--> it going to close the session
+            .isNew()--> it will tell you where the  session is newly created or it is an existing session
+
+
+TASK: 
+create a  logoutservlets
+session.invalidate() 
+
+
+Filter and Listeners:
+
+
+filter:
+
+what is the filter component under the servlets JEE specification
+all the request  processing that you do  in your application generally goes in the doGet and doPost method
+requset processing logic is the set of business rule implementation 
+
+what do you mean by business rule implementation?
+eg: you developing the health care application and you have a use case there to implement
+"which is booking a doctor appointment for a patient"
+this use case have a certain set of steps that you need to translate into your code
+when i want to book a docter appointment i have to check
+                    the date of the appointment ,
+                    i have to check the docter availability, 
+                    then it is available i have to quickly book it for the patient 
+                    otherwise i have to deny the appointment for the patient
+                    and if i book the appointment then ill also block the doctors slot so that nobody else can book the appointment with that docter
+
+what we saying is there is a set of steps in each use case which is provided in your requirement specification documents which you will now translate into the code in the form of business rule implementation
+all the request processing logic that you write may not go only into the servlets 
+becz servlets are  generally for intercepting the request and giving back a response , so you could actually lay down the business rule implementation logic in your business logic class or your service class depending on whatever kind of  MVC architecture
+
+
+now imagine that this is the scenario ,
+ where you have a client coming in with a request, its go to the servlets and servlets  does actual processing logic, prepare a response and give it back to the client
+but let say you want to do some kinds of job before this request reaches the servlets
+
+lets say when there is an incoming request i want to log the date and time of that request(just for an activity tracking purpose )or 
+(say i have a request in and when it hit the servlet , i want to maintain a counter for the number of request to the same servlet , so when ever the request coming in to the servlets . i need to quickly increment that counter) or
+(another eg: lets say the request has reached the servlets , the servlets has done the processing logic , its already a prepare a response like it is an html response  and now you really need to transform that response to some other format , so that the client understand ,like you want to transform the html to wml file and then get it back to the client)
+
+so all this jobs above talking about are administrative tasks of your application they are not directly related to your business rule implementation and that  exactly where the filter pitch in for you
+
+let see  feature of filter
+1.filter are those entities n your web application, theyre class basically that you write which are reserved for preprocessing and postprocessing resquest
+2.so filter are never going to produce output themselve, but yes they are definitely going to dynamically intercept your request and response to apply those additional functionality across all your pages
+3.filter are extremely crucial component in a web application becz for one they promote modularity
+what it does mean? they give you the way to separate  out those administrative jobs from your actual request processing job , which means youre making your code modular
+moreover thre code may that you write in a filter can be spplied across various use case of your application  which essentially that youre promoting the reusability
+modularity,reusability,maintainability is definitely going to increase
+
+4. filtre possess the power of abruptly terminating the request execution, if there s something going  wrong in the filter then the  filter go back to the client stating that something went wrong and it can restrict the entry to the subsequent servlet
+
+
+
+flow of filter in application:
+
+            -----------------------------------------------------------------------------
+            |                                                                            |
+    request |         -------------                                 ------------         |
+ user-------------->  |  filter   |     ------------------->      |  servlet   |         |
+     <-------------    -------------     <------------------         ------------        |
+    response|             |                                            |                 |
+            |             |                                            |                 |
+            |             |                                            |                 |
+            |             |                                            |                 |
+            |             |                        context             |                 |
+            --------------|--------------------------------------------|-----------------
+                          |                                            |
+                          v                                            v
+                   preprocessing                         actual request processing 
+                   postprocessing                        logic  and prepare response
+
+        
+user coming in with a request , when it come it will first enter a context (application) but the first place that it will go to,is the filter , filter is going to do some preprocessing logic after which it will hand the  request to the servlet, the servlet os then going to do the actual request processing logic it may traverse through the other layer as well like dao etc to complete the processing and then it will prepare a response , the response is then again going into the filter where the filter will now do postprocessing bit of logic and afer that the response id finally carried back to the client
+
+the most commonly applied use case for the filter in a web application in your industry project are
+user authentication(you actually authenticate and verify whether thre incoming user is a correct user otherwise you can restrict the the access for that user for entire system) you can also do response transformation which is of course coming in the postprocessing bit ,so you can transform your response from one format to another format so that the client understand, 
+you can also do logging, you can do any kind and any levelof logging in the first,so that  your application is tracked and you have  a log continuously about the activities in your application 
+other use case  falling in this may be , encryption you can encrypt your data and decrypt or compress your data and decompress
+
+"so all this job are you see--> is not a part of your business application but there are the other administrative task that you need to perform for your application"
+and needd not encompase all the functionality all the filter in one single filter class , you can have one to n filter configured in your application
+
+
+Filter API:
+1.javax.servlet.filter Interface, it the main interface which is got all the methods , so you are going to write a class  in your application which is going to implement the interface
+
+2.javax.servlet.filterConfig, if you want to pass any kind of configuration information to the filter, you have this API ready at your disposal (this is similar to the servletConfig that we have seen for the servlet class)
+
+3.javax.servlet.filterChain, this is very critical API , because this is going to help you participate in the chaining process, when a request comes into your system , it may go throught let say two or three filter and when finally everything is okay it will land up in this servlet , so that entire set of filter and servlets basicaly forms a chain 
+filter  chain will allow you to invoke  those entities in that  order
+
+4.doFilter API , so that a methods which declare in the filter interface and it is an  essentail call in the filter , becz it holds all your filter logic
+
+
+
+
+so all of this filter are going to perform preprocessing
+
+            Request---> filter 1--- filter 2--- filter n---servlet
+                           ^         ^            ^        |
+                           |         |            |        |
+                           |         |            |        |
+                           |         |            |        v
+                   <------------------------------------ response
+
+eg:
+when we reach the home page  after login credential, i should completely restrict the access to order history and view my profile becz the link that are very specific to  the user login, 
+ in case anybody is trying to access it maliciously or from some other machine or lets say the session itself times out on this machine  in both these cases, i have to go back to login pages and ask the user to login again , so this is the functionality that we going  to incorporate in the filter class  that we're going to write as a part of our application
+
+ we're going to restrict the access to the system in case anybody tries to access these URLs maliciously or the session is invalide
+
+
+process:
+login_request-->servlet-->DAO
+after clicking those link, the filter will do authentication and block the access to the certain servlets URLs(order history or viewmyprofile)
+this is gona happen if any malicious user access  the urls on a different machines or itself the session timeout
+if you want to archive this functionality inthe filter , what you actually need to do is somehow get access to that session object and check if you have a valide username , if you do get a validate usernameit means that the same session that is getting carried on , so its fine to allow an entry to the next page, if not you can stop the execution and go back to login asking the user to login again
+
+TASK:
+add the validation methods in dao
+call the dao methods from loginServlet
+prepare an error message for invalid user and set it in request , display on jsp
+in the filter, create a folder filter and add a class authenticationFilter the implements filter
+(you got three methods destroy , init, doFilter)
+ 
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+   @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        Filter.super.init(filterConfig);
+    }
+    @Override
+    public void destroy() {
+        Filter.super.destroy();
+    }
+
+any kind of inicialization and cleanup activity that you want to put in for the filter can go into the init  and destroy methods respectively
+in init methods there will be a filterConfig which is used to pass theconfiguration information to this filter
+lets say your filter wants to do any kind of preprocessing or postprocessing logic for which it need some kind of configuration information you can fetch it through the  filterConfig parameter
+and destroy is merely the place for the cleanup activity, so you can just go  and close all your resources  inside the destroy methods
+doFilter API is the heart of the filter, it is going to hold all of your filter logic  it is public not return anything it has  parameter servlet Request and Response they arec generic parameter, theyre not your HttpServletRequest and HttpServletResponse that is essential because the filter component has been designed , so that it can fit into any kind of protocol independent application, it does not have to be restricted only for HTTP protocol that why they are generic there and the third parameter is the filterChain which is ofcources the one that is going  to help you invoke the chain of filter and then subsequently the servlets,so this is the doFilter methods
+here we are going to get the session and check whether you get an attribute in the session of username and if you get a valid value of username then we allow the entry into the servlet that comes after this, then we donot get any username then there a problem either is a malicious access or the session timed out, so we will just go back to the login page
+
+we are gingto make that check only for the couple of URLs which are very specific to the login use case,becz other URLs you can access even without a  login, this is very subjective requirement that i have for my application , in your application you can choose  to where are the point where you want to restrict the access so its completely dependent upon the requirement of the application
+after if you get the session null browser not found the right user then it will move out to the login jsp
+
+we have to call the servlet by filterchain
+very important and critical statement that you need to write in the code, 
+this line now going to take control to the next servlet
+the next servlet is which ever the servlet the user tried to access from the browser
+       " chain.doFilter(request, resp);"
+if you have more than one filter in your application , then this call is going to take you to the next filter
+lets say you have a 3 filter if you in first filter , the above command will take you to the second filter, if you are in second filter this call will take you to the third filter, so this chaining process that you do is extremely critical otherwise your flow will not complete
+
+the filter that you can configure in your application and the servlet together form a filter chain
+whatever you write this
+
+(retrieve the session for the sensitive URLs and check for the valide username)
+
+run the application 
+and try to paste this  url in different window like try in cognito window
+http://localhost:8080/javaserverpage/getProfileDetails
+you reach in login page not in profile page that is what we trying here for an authentication purpose using an filter before the request mobving in the servlet we intercepting the request and doing some adminstrative task like authentication etc...
+
+
+Events and Listeners:
+
+events in JEE:
+notification of change in state of certain object
+changes occurs in different level:
+                    changes in servetContext object-->application level
+                               HTTPSession object-->session level
+                               HTTPServletRequest object-->request level
+
+events can either be changed in the life cycle or the information that you may be added removed or replaced
+in above object
+
+when can events occurs?
+all the categories of events  triggered that occurs in JE application
+1.deploy or undeploy the application at context level
+2,when you create a session when user logs in and logs out(invalidate the session)
+3.when a client hit a request and request goes to the servlet and the request processing is starte also an event
+4.servlet context or session or request , you add , remove and replace the attribute
+5.session migration(this typcally happen in distributed environment or set load balancing, lets say the two machine that the application deployed(first few request come in one machine next few in other one , so you may need to move the session from one machine to another))
+6.object binding and unbinding itself from the session
+
+
+Listeners:
+Event Listeners in JEE:
+it is basically a classes that can be return in order to response to those events, you can trap those event , you can capture them and then you perform a logic that is necessary for your application
+
+
+Listeners can be created by inheriting the appropriate interface or interfaces from either the 
+javax.servlet package or  javax.servlet.http package
+listeners are going to be crucial because they help you a lot for efficient resources management and automated task pocessing
+
+we know that managing the database connection is alway very critical  factor in the application,
+here we setting up the database connection in dao class the dao class API is only going to get called when a request comes in from a user
+like requset-->servlet-->dao-->db connection
+
+but now think of this scenario:
+lets say a request came in and it enter into the servlets, from the servlet we call the dao, now when we were tring to setup the connection in dao, lets say the database server is down if that is the case you will never be able to setup a connection and then the entire cycle of that request is going to fail and it will be an embarassing situation for the application
+instead of this can we do something like, we could actually setup the database connection at the point where we are deploying our application
+so even lets say when we deploying our application and the database server is down we can just shutdown the application so that no user can access it
+its a better solution then the one the way we got a request already and then the server is down and youre not able to do anything, so that way the listener  help you to do efficient resource management abd they will also help you to automate certain tasks for your application
+
+
+process:
+our previous flow 
+"servlet--> dao -->database"
+what  we are going to do this take this entire job of setting up the database connection inside our listener class and we aregoing to pickup that listener class which is going to get executed when your application gets deployed or undeployed
+
+after implementing the listeners --> the flow will be like this:
+"Listener(setup DB connection)-->Servlets retrive connection-->pass the connection to dao-->database"
+the listener at the deployment time itself is going to get executed and itll setup the db connection object for you
+whenever the request comes in from the user any of your servlet can retrieve the connection which wassetup by the listener and pass it to the dao and subsequently the dao will talk it to the database
+
+
+JEE provideyou a lot of listeners interface  that you can create a class out of
+
+        ServletsContextListener--> it is going to be responsible  ( you going to capture the events )for deployment and undeployment event software application
+
+        ServletsContextAttributeListener--> if you going to add remove replace  attribute in the servletContextObject(you have this listener to trap those events)
+
+        HttpSessionListener-->this is dedicated for the HTTPSessionObject, so when the session get created and destroyed that the point where you trap those events using this Listener interfaces
+
+        HttpSessionAttributeListener--> if you going to add remove replace  attribute in the HTTPSessionObject , then you have this to trap those event
+
+        ServletRequestListener-->so you have a request processing that is starting , use can this Listener 
+        to trap the event
+
+        ServletRequestAttributeListener-->if you try to add,remove,and replace attribute of the request
+
+        HTTPSessionBindingListener--> if you have an object binging or unbinding itself from the session that you can trap those event
+
+        HTTPSessionActivationListeners-->it is basically responsible for session migration event
+
+task:
+write the listener class that implements that javax.servlet.ServletContextListener interface and generate the pair of methods(contextDestroyed,contextInitialized)
+
+when you deploy the applocation where the contextInitialized will get executed automatically, wheneveryou undeploy the contextDestroyed is the method that will get invoke
+(it help you to trap the event of deployment and undeployment in your application, whenever the application is going to get deploy we are going to setup the connection  object of the database)
+
+obtain DB connection object in the contextInitialized methods
+(event and event listener they are bundle up in the same package, whenever you have a listener you will havethe associate event object for it, so that you can retrieve any information with respect to the event you wish to be in code)
+
+store the connection object in servletContext as an attribute
+ @Override
+   public void contextInitialized(ServletContextEvent init){
+       System.out.println("in contextInitialized methods");
+       Connection conn = dbConnection.getConnectionDatabase();
+       init.getServletContext().setAttribute("dbConnect",conn);
+   }
+
+configure the listener in the deployment descriptor
+    <listener>
+        <listener-class>com.listener.applicationListener</listener-class>
+    </listener>
+
+get the DB conecction in any of the servlets using the ServletContext object instead on setting up directly in dao layer
+eg:
+take searchServlet , cancel the connection  in searchProduct of applicationdao and pass that connection as an argument
+    public List<product> searchProduct(String searchString,Connection conn) 
+
+and in serachServlet
+              //get the connection from the servletContext of listener
+              Connection conn= (Connection)getServletContext().getAttribute("dbConnect");
+
+               //call Dao layer to get all product for search criteria
+               applicationDao dao=new applicationDao();
+               List<product> productsearchedList = dao.searchProduct(searchString, conn);
+
+simple picking up the connection object from the listener
+after modify and run (deploy) the application , check the console 
+
+console:
+"you enter in contextInitialized methods
+MySQL JDBC Driver Registered!
+Database successfully opened.
+Connection made to DB!"
+
+
+this is the efficient resources management that you can setup with listener
+
+
+
+
+
+JSP standard Actions and Expression Language:
+advent of jsp standard actions
+basic element in jsp: 
+        scriplet--> it allow you to write java code statement
+        expression--> it allow you to evaluate expression print them on jsp
+        declaration-->allow you to introduce new instance, variable and methods in the translated servelt for jsp
+
+1.jsp only used to navigating and displaying object data
+in MVC architecture
+jsp is the view  layer of your application
+
+2.generally presentation, other than it really do not do anything,it should not be involved in any kind of business logic nor kind of any database interaction
+
+
+
+        <div class="productContainer">
+        <%
+            List<product> prods = (ArrayList) request.getAttribute("product"); 
+            Iterator<product> iterator = prods.iterator();
+            while (iterator.hasNext()) {
+                product product = iterator.next();
+        %>   
+        <form action="product" method="get" >
+            <div class="productContainerItem">
+                <img id="pic3" src="<%=product.getProductImagePath()%>"> <input
+                    type="text" name="product" value="<%=product.getProductName()%>"><br/>
+                <button>Add to Cart</button>
+            </div>
+        </form>
+        <%
+            }
+        %>
+        </div>
+
+ this is just a code for small portion of your page, but let say your jsp is huge and contain a lot of dynsmically generate content on that case ,  looking at this code and reading it out is difficult, readablity is highly reduce becz becz it try to make your code a little messy
+ take this in login.jsp
+
+<div class="container tagline">
+			<% if(request.getAttribute("error")!=null){ %>
+			<em><%=request.getAttribute("error")%></em><br />
+			<%} %>
+			<em>LOGIN USER</em>
+			<form action="login" method="post">
+				<label>Username</label>
+                                <input type="text" name="username"id="username"><br />
+                                <label>Password</label> 
+                                <input type="password" name="password" id="password"><br/> 
+                                <input type="submit" value="Login">
+			</form>
+		</div>
+3.the above is less readbale , messy and non-maintainable in future, and difficultto read that code
+
+so we need to adopt an approach to avoid writing length code or minimal code in jsp page
+when you look at html set of tag it is definitely more readable code and understand is quickly rather than jsp element code
+so instead of wrinting java code statement we start writing tag
+however when it come to jsp code it is basically java code and that needs to get  executed throught the server side
+whenever we write a tag and when jsp execute behind the scene their must be a java code that should run  so that it does  the job that you want to do on your presentation
+and that exactly where you have jsp standard actions comes in
+
+
+tags that take action during jsp execution:
+                    1.navigate  throught java object graphs(you want to fetch the value of java property out of a java object, which ispropbably set in some pre-defined scope like request,session,application etc) and display the output on the jsp page
+                    2.forwarding or including resources(requestDispatcher API which allow us to forward  an control to another servlet or another jsp), it also include thats combining the response of both the resource(so whatever you could do there inside the servlet using request dispatcher you could do the same thing on jsp as well, using jsp action you can also forward or include the resources in the current context)
+
+                    syntax:
+                            <jsp: nameOfTag/>
+                            all the information can be specified with attribute of tag instead of writing lengthy code statement, instead just define attribute so that when the stack execute on jsp  its going to run some java code behind the scene and do the job that you already done before with scriplet or expression
+
+
+commonly used jsp standard action:
+            <jsp: useBean.../>--> it help you to iniciate a bean on the jsp page and it also help you to fetch a bean  a java object on the jsp which is already set on predefined scope
+
+            <jsp: forward.../>--> forward the controll to another resources in the context
+
+            <jsp: include.../>--> include the another resources in current resources
+
+            <jsp: getProperty.../>-->help you to evalute the value of a jsp property from an object and display if for you on your jsp
+
+            <jsp: setProperty.../>-->help you to provide a value  to particular java property of an object directly on the jsp
+
+
+process:
+after login, click the  viewProfile  and displaying the data related to user using jsp standard action
+
+TASK:
+add a methode in dao  to get a profile details
+write the viewprofiledetain servlet class which collect username and call the dao layer to fetch profile information
+store the entire profile information in request object
+display on jsp using jsp standard action
+
+
+<%@include file="/html/header.jsp"%>
+<jsp:include   page="header.jsp"><jsp:param value="" name=""/></jsp:include>
+
+question comes what is include directive and include jsp standard action
+include directive is the included resource and current resources they both going to be combined and going to be translated into  a servlet file(you are including an static resources that does not change much)
+jsp include standard action is current resources translated separately and the included resources translateed separately and at run time those respnse will combine and they will be rendered to the user
+(if you think that you want to execute some code in the included resources, dynamic execution if its required in your included resources strict to include jsp standard action and also you can send parameter under the header.jsp by using <jsp:param value="" name=""/>)
+
+
+
+
+Expression Language:
+
+we constantly moving toward goal where we minimize the java code statement and do everything  possibke by means of tag,element,expression
+expression language is one which allow you to write simple expression on jsp
+now what can those expression do for you?, think about what you can do for jsp ?
+
+jsp for  display or presentation purpose
+so if you want to go ahead and dynamically read the data of javaBean components  or may be read the data out of any implicit object that you have been storing it into that can be quickly read and  displayed on the jsp with simple expression
+ you can also invoke the public method and  go ahead basically evaluate and print output of those expression on jsp page
+ perform operation like arithemtic,relational,logical that you could perform in expression language are very useful when you perform with javaServerPage stack library(jstl)
+
+ expression language has lot of capabilities that just reading the data off your java components
+
+ as per the 2.1 specification of jsp,EL is unified EL(it is union of  EL offered by the JavaServerFaces technology 1.0 and javaserverpages technology 2.0)
+ JSF is the framework which is used to build component based user interface for a web application and its 1.0 version is also going to use expression language 
+ so that one and one  that we use in jsp technology 2.0 have been  combined and now together they form  unified expression language
+
+ Syntax and Expression language
+
+ $(cart.noOfIterms)--> this is the expression on jsp page , this means that trying to read number of items property from an object called cart and that object could be stored in one of our predefined scope(it could be request,session,application,page etc)it signifies that you try to display property and print it to your jsp page
+
+alternate syntax:  $(cart["noOfIterms"])//itis always preferred becz it is also going to allow you to access array,arrayList,map etc so basically your data structure,so this is consider to be more powerfull
+
+expression are primarly of two type
+value and methode expression
+
+
+        immediate type--> the one that get evaluate  immediately when your jsp executes
+        syntax:  ${},used by JSP
+
+        deferred --> which is going to evaluate at later point in time somewhere in the page lifecycle
+        evaluation is going to be completely responsible  of the underlying technology that youre using
+        syntax: #{}, used by JSF
+        you have a jsf framework you have this page lifecycle undergoing many phases like component event handling or data validation, populating the data into the bean etc,so that where jsf is going to decide which of the expression can be deferred and executes at a later point in time
+
+
+
+eg of writing a EL on JSP:
+you want to navigate  through all the data of your javaBean on EL
+${user.age}
+it trying to get the age property of the user bean and the it trying to print it to the page
+
+${requestScope.noOfItems}
+trying to fetch a property called noOfItems and it has to be picked up from the request scope and display it for me on jsp
+
+${sessionScope.username}
+you try to get the property from the sessionScope
+
+for arithmetic operation
+${a*3.1414}, ${a mod b}, ${a % b}, ${a div b}, $ {a/b}
+you could write out any expression using any of the arithmetic operator
+
+for relational operator
+${a*b==10},${a*b eq 20},${a*b ne 20},${a>100},${a gt 100},${a< 100>},${ a lt 100},${a <=100>}
+
+for logical operator
+${(23>=100) and (13<100>)},${(23>=100) && (13<100)}
+
+
+process:
+take the profile.jsp we will do now evaluate and display all the data using expression language
+we are going to make one more table on profile .jsp which is basically  a weight summary the weight summary for the particular login user is going to be displayed for the months of jan,feb,mar
+
+
+TASK:
+we have to create  aweight summary data on viewprofileServlet
+and access the all the information on profile.jsp using expression language
+
+<jsp:useBean id="user" scope="request" type="com.bean.user"></jsp:useBean>
+eliminate above line no need in EL 
+
+<jsp:getProperty property="username" name="user"/>
+instead of using jsp property to get the value on page we use expression
+${user.username}
+
+now you must wondering, how did it understand that, it has to pick up this user object from the request scope because when we specified  the jsp standard action mechanism we explicitly mention that youre supposed to pick up this object from the request scope,in expression language you dont have to do that
+becz expression language is smart enough, what it does is if you have not mention any scope here in your expression itself the it is going to search this object by they key user , by the name user in those four scope such as page,session,request,application scope
+
+    <td>january</td>
+    <td${requestScope.weightSummary["january"]}></td>
+
+where is this request scope name coming from? how did i write requestScope that is becz if you look at the jsp implicit object, we have a request as the implicit  object for the request, but the expression language the implicit object which you help you access the data of the request object the name for it  is request scope
+
+
+
+
+EL implicit object:
+
+expression could be written as ${noOfItems} or ${requestScope.noOfItemns}
+so basically each of this expression doing the same thing
+EL implicit object is not same as jsp implicity object(nine implicit object in jsp) EL implict object are most of them are java.util.map instances, basically object of instances containing value pair of attributes from the actual jsp implicit object
+
+
+
+
+
+jsp implicit object:---------------->key value attribute------->hashmap    EL implicit object:
+HTTPServletRequest                                             key|value   requestScopes
+                                                                  |
+
+
+
+All EL implicit Object:
+            requestScope-->map of all attributes of actual HTTPServletRequest implicit object
+            sessionScope-->map of all attributes of actual HTTPSession implicit object
+            pageScope-->map of all  page-scope attributes(jsp implicit object there is scope called page whatever attribute you store in page those are going to be extracted and put in a separate hashmap which is pagescope )
+            applicationScope-->map of all  application-scope attributes(whatever the attributes are present in the part of the application scope which is servlet context object theyre going to be extracted and put in a map and that map is going to be named as application scope)
+            cookies--> this is going to map all the cookie object
+            param-->get the request parameter  request.getParameter("id")----> ${param.id}
+            (param is basically going to get the request parameter)
+            header-->this is going to return you the value of header
+            ${header["user-agent"]} name of the header like user-agent(value of browser information like chrome, mozilla,internet,firefox), content-type etc...
+            headerValue-->get all the request header value in an array
+            init-param--->(you have a context init parameter where you can pass the configuration information to all the servlet) context.getInitParameter("")-->${initParam.id}
+            pageContext-->this is only as same as pageContext implicit object of jsp
+
+
+if the predefined scope is not mentioned in the expression the the system will search the object in all scope in the following order: page,request,session, application where it finds the property pick it up and going to display it to you
+it is a little risky business if you have the same property name in two different object or two different object scope
+if however you want to particular pick it up from a specifi  scope then you may want to go ahead and use those implicit object  of the expression language
+why you using expression language is strict to use EL implicit object , when you use scriplet and expression element you are strict to use jsp implicit object
+
+
+javaServerPage standard Tag LIbrary
+it a library of tags
+bundle of tag that accomplishes core functionalities  of the web application for your jsp page
+
+entire bundle comes encapsulate in a jar file to  be added to buils path,which is outside the servlet API , so it has to be externally downloaded and then you have to add it to the build path of our project
+
+we seen about directive , we said that taglib directive can be only seen when we come to jstl
+
+what are the job can jstl can do for you?
+        
+        1.core module
+        displaying data(navigating through all your java object through a server site),iteration ,conditional statement 
+        when  the conditional statement (for or while loop) write in scriplet , but when it comes to jstl,it has ready made tag
+        i really  dont  no need to go  ahead and manipulate the data object  on my server side and then get it  to my jsp
+
+syntax:<c: name of tag/>
+        2.FMT module
+        formatting value(date formatting,currency formatting),localization(its a process of localizing all your label and information or error message that you display  on jsp to a central file you do not wnat to go ahead and hard code all the message and label in all your jsp pages, that you display on jsp for central  file even if you have a changes you can do at one place),internationalization(it a concept where you make your application available in a various locales , locales is language, i can say i want to build a application for german, frances so i can do that using  internationalization concept )
+
+syntax:<fmt: name of tag/>
+        3.xml module
+        parsing and manipulating xml document
+
+syntax:<xml: name of tag/>
+        4.sQL module
+        querying database with sql(you can do any kind of transaction right there are in a jsp page)
+
+syntax:<sql: name of tag/>
+
+this all module can be take place with the help of taglib directive
+jstl is completely aligned to unified expression language
+it is a combination of expression language used by  javaServerPage and javaServerFaces
+
+process:
+after login credencial, view the order history
+
+TASK:
+write a servlet class for the jstl demo
+add a method in applicationDai class to get order details for the user
+call the applicationDao method  from the servlet class and set all data in the request scope and forward the control to home.jsp
+
+after setting orderHidtory(servlet), order(bean),getoder(applicationDao) ,orderTable(database)
+add jstl jar to build path
+add jstl module on jsp (it done with taglib)
+using one by one
+        <%--<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+        <div class="container">
+			<c:if test="${requestScope.orders!=null}">
+				<h2 class="headline">
+					<fmt:message key="label.home.orders" bundle="${message}"></fmt:message>
+				</h2>
+				<table id="orderHistory">
+                    <tr>
+						<th><fmt:message key="label.home.table.header1"	bundle="${message}"></fmt:message></th>
+						<th>Product Name</th>
+						<th>Order Date</th>
+						<th>Product Image</th>
+					</tr>
+					<c:forEach items="${requestScope.orders}" var="ord" varStatus="loop">
+						<tr>
+							<td>${loop.count}</td>
+							<td>${orders.productName}</td>
+							<td>${orders.orderDate}</td>
+							<td><img width="200px" height="150px"src="${order.productImgPath}"></td>
+						</tr>
+					</c:forEach>
+				</table>
+			</c:if>
+		</div>
+
+
+        <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>--%>
+    going to store the  label in location file 
+    create a applicationResources.properties file (#resouces  bundle which will store all your label)
+    for english language
+    applicationResources_french.properties file for french language
+
+    add this line on home.jsp for localixsation and internationalization
+<fmt:setBundle basename="com.resources.applicationResources"var="message" scope="session" />
+<fmt:message key="label.home.orders" bundle="${message}"></fmt:message>
+
+        <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>--%>
+        <%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x"%>--%>
+
+
+custom tag library:
+user defined jsp element
+can contain one or more tags bundle together(you can bunde them in a jar file)
+when we write our own tag library(we have to define a what that tag is,what is the name ,what are the attribute to the tag and then what is the java code that is going to run behind the scenes, what that tags executes on your jsp)
+so as for the information folder tag in your library, you will have to define the desriptor file
+so that descriptor is  a tag library descriptor (which is an XML document and that going to contain the information about the entire tag library as whole  and it also gives you the information about each tag that is going to be contained in the library)
+
+tag library descriptor file name must have the extensionn of .tld
+it an xml document but the extension will be .tld 
+and it must be packaged inside the  /WEB-INF/ directory  or subdirectory of the war  file
+
+custom tag look like this:
+<myTags:formateDate.../>
+
+custom tag library task:
+produce and print output of library
+empty tag :perform server side work
+empty tag:create object to be used by therest of the page
+empty tag:inserts content into the page
+
+there are many other task that custom tag library can do
+there is a job that you have in your requirement specification which can not be done by the tag  form the jstl library , then you go ahead and  develop your own
+
+tag handler API:
+when we put a tag on the jsp , it also going to execute some java code behind the scene,this is what we need to understannd what kind of class you will have to write, when you talk about the class that you have to write for the custom tag, now hwenever a jsp contain a custom tag and that jsp is going to be  converted into the sublet class in the transition process than that tags that wriiten out  in the jsp is converted  to the methods on the tag handler class that youre written for that tag
+
+so it is going to call the neccessary operation on your tag handler class and then executes and print the output for you
+custom tag handler class that i write in the application must use one of the following:
+                classic handler: tag ,bodytag , iteractive tag interface
+                simple tag handler:simple tag interfaces
+an even simpler version will be to just extends the abstract class called SimpleTagSupport that already implements the simple tag interface
+when you actually extends the abstract class , what happens it already comes ahead with some convenient functionlaity that you really don't have to sit and implements so that you just focus on specific implementation that is going to against your custome tag
+so easyiest way to just extends that abstract class of simple tag support and go ahead and provide implementation to those methods
+
+
+tag handler development in our project:
+
+TASK:
+define the .tld file describing one or all tag(ot an xml file)
+namespace
+inside:
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!--namespace-->
+<taglib version="2.0" xmls="http://java.sun.com/xml/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd" > 
+    
+    <tlib-version>1.0</tlib-version>
+    <jsp-version>2.0</jsp-version>
+    <short-name>app tag handler</short-name>
+    <description>this is the  custom tag library for application</description>
+    <display-name>application tag library</display-name>
+    <uri>http://www.hplus.com/apptag</uri>
+    
+<!--    tag element that has information about my custom tag-->
+    <tag>
+        <name>formateData</name>
+        <tag-class>com.customTag.appHandler</tag-class>
+        <attribute>
+            <name>date</name>
+            <!--            evaluate an expression dynamically-->
+
+           <rtexprvalue>true</rtexprvalue> 
+        </attribute>
+        <attribute>
+            <name>formate</name>
+        </attribute>
+        <body-content>empty</body-content>
+    </tag>
+</taglib>
+
+create com.customTag folder and create appHandler file
